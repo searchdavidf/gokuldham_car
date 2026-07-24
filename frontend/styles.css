@@ -1,0 +1,207 @@
+/* ===== Tokens ===== */
+:root{
+  --ink:#16332E;
+  --ink-2:#1F4038;
+  --ink-soft:rgba(22,51,46,0.68);
+  --paper:#EEF0E6;
+  --paper-2:#E4E7D8;
+  --card:#FBFBF7;
+  --brass:#B3872F;
+  --brass-light:#D9AE5C;
+  --sage:#6F9483;
+  --sage-light:#E4EBE6;
+  --plate-blue:#14509A;
+  --danger:#8E3B3B;
+  --success:#2F6F4E;
+  --line:#D9DCCB;
+
+  --font-display:"Fraunces", ui-serif, Georgia, serif;
+  --font-body:"IBM Plex Sans", system-ui, -apple-system, Arial, sans-serif;
+  --font-mono:"IBM Plex Mono", ui-monospace, monospace;
+
+  --shell-max:1080px;
+  --radius:10px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:var(--font-body);
+  background:var(--paper);
+  color:var(--ink);
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(111,148,131,0.10), transparent 40%),
+    radial-gradient(circle at 88% 4%, rgba(179,135,47,0.08), transparent 35%);
+}
+.shell{max-width:var(--shell-max);margin:0 auto;padding:0 24px}
+
+a{color:var(--ink-2)}
+::selection{background:var(--brass-light);color:var(--ink)}
+
+:focus-visible{outline:3px solid var(--plate-blue);outline-offset:2px;border-radius:4px}
+
+/* ===== Header ===== */
+.site-header{padding:22px 0 14px;border-bottom:1px solid var(--line)}
+.header-row{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:36px;height:36px;color:var(--brass);flex-shrink:0}
+.brand-text{display:flex;flex-direction:column;line-height:1.15}
+.brand-name{font-family:var(--font-display);font-weight:600;font-size:19px;letter-spacing:0.02em}
+.brand-sub{font-size:11.5px;color:var(--ink-soft);letter-spacing:0.03em;text-transform:uppercase}
+.site-nav{display:flex;gap:24px}
+.site-nav a{text-decoration:none;font-size:14px;font-weight:500;color:var(--ink-soft)}
+.site-nav a:hover{color:var(--ink)}
+
+/* ===== Gate hero ===== */
+.gate{padding:48px 24px 64px}
+.gate-grid{display:grid;grid-template-columns:400px 1fr;gap:28px;align-items:stretch}
+
+.panel-card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:22px;
+  box-shadow:0 10px 30px rgba(22,51,46,0.06);
+}
+.tabs{display:flex;gap:4px;background:var(--paper-2);border-radius:8px;padding:4px;margin-bottom:18px}
+.tab-btn{
+  flex:1;border:none;background:transparent;padding:9px 8px;border-radius:6px;
+  font-family:var(--font-body);font-weight:600;font-size:13.5px;color:var(--ink-soft);cursor:pointer;
+}
+.tab-btn[aria-selected="true"]{background:var(--ink);color:#fff}
+
+form label{display:block;margin-top:12px;font-size:13px;font-weight:500;color:var(--ink-soft)}
+form label:first-child{margin-top:0}
+input,select,textarea{
+  width:100%;margin-top:6px;padding:11px 12px;
+  border:1px solid var(--line);border-radius:7px;
+  background:#fff;font-family:var(--font-body);font-size:14.5px;color:var(--ink);
+}
+input::placeholder,textarea::placeholder{color:#9AA39C}
+textarea{resize:vertical}
+
+.btn{
+  font-family:var(--font-body);font-weight:600;font-size:14.5px;
+  border-radius:7px;border:none;cursor:pointer;padding:11px 16px;width:100%;
+  transition:transform .12s ease, opacity .12s ease;
+}
+.btn:active{transform:scale(0.99)}
+.btn[disabled]{opacity:0.55;cursor:not-allowed}
+.btn-primary{margin-top:16px;background:var(--ink);color:#fff}
+.btn-primary:hover{background:var(--ink-2)}
+.btn-ghost{background:var(--sage-light);color:var(--ink-2)}
+.divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--ink-soft);font-size:12px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--line)}
+.form-note{font-size:12px;color:var(--ink-soft);margin-top:10px;line-height:1.5}
+
+/* ===== Nameplate (signature element) ===== */
+.nameplate{
+  background:linear-gradient(160deg, var(--ink) 0%, var(--ink-2) 100%);
+  border-radius:var(--radius);
+  border:1px solid rgba(179,135,47,0.4);
+  padding:36px 40px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;
+  box-shadow:0 20px 45px rgba(15,30,27,0.28);
+}
+.nameplate::before{
+  content:'';position:absolute;inset:10px;
+  border:1px solid rgba(217,174,92,0.35);border-radius:6px;pointer-events:none;
+}
+.nameplate-inner{position:relative;z-index:1}
+.nameplate-eyebrow{
+  display:inline-block;font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--brass-light);margin-bottom:14px;
+}
+.nameplate-title{
+  font-family:var(--font-display);font-weight:600;font-size:clamp(38px,5vw,58px);
+  line-height:1.02;letter-spacing:0.01em;margin:0;
+  color:#F3E9D2;
+  text-shadow:0 1px 0 rgba(0,0,0,0.35), 0 -1px 0 rgba(255,255,255,0.06);
+}
+.nameplate-rule{display:block;width:64px;height:3px;background:var(--brass);margin:20px 0 16px;border-radius:2px}
+.nameplate-caption{font-size:14.5px;color:rgba(243,233,210,0.78);max-width:34ch;line-height:1.55;margin:0}
+
+.nameplate-facts{
+  position:relative;z-index:1;
+  list-style:none;margin:32px 0 0;padding:20px 0 0;
+  border-top:1px solid rgba(217,174,92,0.25);
+  display:flex;gap:36px;flex-wrap:wrap;
+}
+.nameplate-facts li{display:flex;flex-direction:column;gap:3px}
+.fact-num{font-family:var(--font-mono);font-weight:600;font-size:19px;color:var(--brass-light)}
+.fact-label{font-size:12px;color:rgba(243,233,210,0.65)}
+
+/* ===== Ledger (signup) ===== */
+.ledger{padding:8px 24px 80px}
+.ledger-head{margin-bottom:26px}
+.ledger-head-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;max-width:56ch}
+.ledger-head h2{font-family:var(--font-display);font-weight:600;font-size:29px;margin:0 0 8px}
+.ledger-head p{color:var(--ink-soft);font-size:14.5px;line-height:1.6;margin:0;max-width:56ch}
+.btn-close{
+  display:flex;align-items:center;gap:6px;flex-shrink:0;
+  background:transparent;border:1px solid var(--line);border-radius:7px;
+  padding:7px 12px;font-family:var(--font-body);font-weight:500;font-size:13px;
+  color:var(--ink-soft);cursor:pointer;
+}
+.btn-close:hover{background:var(--paper-2);color:var(--ink)}
+
+.entry{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px 22px 22px;margin-top:16px;
+}
+.entry legend{
+  display:flex;align-items:center;gap:10px;padding:0 4px;
+  font-family:var(--font-display);font-weight:600;font-size:16px;
+}
+.entry-num{
+  font-family:var(--font-mono);font-size:12px;font-weight:600;color:#fff;
+  background:var(--sage);padding:3px 7px;border-radius:5px;letter-spacing:0.04em;
+}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.num-cars-label select{max-width:160px}
+
+/* Vehicle plate signature element */
+.plate-grid{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px}
+.plate-field{display:flex}
+.plate{
+  display:flex;align-items:stretch;border:2px solid var(--ink);border-radius:6px;overflow:hidden;
+  background:#fff;box-shadow:0 2px 6px rgba(22,51,46,0.12);
+}
+.plate-flag{
+  background:var(--plate-blue);color:#fff;font-family:var(--font-mono);font-size:10px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;padding:0 7px;letter-spacing:0.05em;
+}
+.plate input{
+  border:none;margin:0;border-radius:0;font-family:var(--font-mono);font-weight:600;
+  letter-spacing:0.04em;text-transform:uppercase;min-width:190px;font-size:14px;
+}
+.plate input:focus-visible{outline-offset:-2px}
+
+#formMsg{margin-top:16px;font-size:14px;min-height:20px}
+#formMsg.msg-success{color:var(--success)}
+#formMsg.msg-error{color:var(--danger)}
+.btn-submit{max-width:280px}
+
+/* ===== Footer ===== */
+.site-footer{border-top:1px solid var(--line);padding:22px 0;margin-top:20px}
+.site-footer p{font-size:12.5px;color:var(--ink-soft);margin:0}
+
+/* ===== Responsive ===== */
+@media (max-width:900px){
+  .gate-grid{grid-template-columns:1fr}
+  .nameplate{order:-1;padding:28px}
+  .field-row{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  .shell{padding:0 16px}
+  .gate{padding:32px 16px 48px}
+  .nameplate-facts{gap:22px}
+}
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .btn{transition:none}
+}
