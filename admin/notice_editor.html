@@ -1,0 +1,21 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin - Notices</title></head>
+<body style="font-family:Arial,Helvetica,sans-serif;max-width:900px;margin:20px auto;padding:0 16px; background-image:url('/assets/background.jpg'); background-size:cover; background-position:center;">
+  <h1>Notice Board - Create</h1>
+  <form id="notice">
+    <label>Title<input name="title" required></label>
+    <label>Content<textarea name="content" rows="6" required>Default notice: Welcome to Gokuldham. Notices will appear here.</textarea></label>
+    <label>Image<input type="file" name="image" accept="image/*"></label>
+    <button>Create</button>
+  </form>
+  <div id="msg" aria-live="polite"></div>
+  <script>
+    document.getElementById('notice').addEventListener('submit', async e=>{
+      e.preventDefault(); const f=new FormData(e.target);
+      const token = localStorage.getItem('admin_token');
+      const r=await fetch('/api/admin/notice',{method:'POST',body:f,headers:{'Authorization':'Bearer '+token}});
+      const j=await r.json();
+      const msg=document.getElementById('msg'); if(r.ok){msg.style.color='green';msg.textContent='Notice created.'} else {msg.style.color='maroon';msg.textContent=j.error||'Failed'}
+    })
+  </script>
+</body></html>
