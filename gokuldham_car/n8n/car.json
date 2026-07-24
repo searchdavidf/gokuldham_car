@@ -1,0 +1,83 @@
+{
+  "name": "car - GitHub -> Deploy -> Telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook/github",
+        "responseMode": "onReceived",
+        "responseData": "{\"status\":\"received\"}",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 260]
+    },
+    {
+      "parameters": {
+        "functionCode": "const crypto = require('crypto');\nconst body = items[0].json;\nconst headers = items[0].json.headers || items[0].json.__headers || {};\nconst signature = (headers['x-hub-signature-256'] || headers['X-Hub-Signature-256'] || items[0].json['x-hub-signature-256'] || '');\nconst secret = process.env.GITHUB_WEBHOOK_SECRET || 'SECRET_HERE';\nif(!signature) throw new Error('Missing signature');\nconst payload = JSON.stringify(body);\nconst hmac = 'sha256=' + crypto.createHmac('sha256', secret).update(payload).digest('hex');\nif(signature !== hmac) throw new Error('Invalid signature');\nreturn items;"
+      },
+      "name": "Verify HMAC",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [460, 260]
+    },
+    {
+      "parameters": {
+        "value1": "= {{$json[\"ref\"]}}",
+        "rules": [
+          {
+            "operation": "contains",
+            "value2": "refs/heads/main"
+          }
+        ]
+      },
+      "name": "Is main branch?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [680, 260]
+    },
+    {
+      "parameters": {
+        "url": "https://gokuldham.kanhasrestaurant.com/api/github/deploy",
+        "options": {
+          "bodyParametersJson": "={\n  \"repository\": $json.repository && $json.repository.full_name ? $json.repository.full_name : null,\n  \"ref\": $json.ref,\n  \"head_commit\": $json.head_commit\n}"
+        },
+        "responseFormat": "json",
+        "jsonParameters": true
+      },
+      "name": "Call Deploy Endpoint",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "chatId": "@gokuldham_car_bot",
+        "text": "={{\n  'GitHub push to main received for repository: ' + ($json.repository && $json.repository.full_name ? $json.repository.full_name : 'unknown') + '\nCommit: ' + ($json.head_commit && $json.head_commit.id ? $json.head_commit.id.substring(0,7) : '') + '\nTriggering deploy.'\n}}",
+        "options": {}
+      },
+      "name": "Telegram Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [900, 340]
+    },
+    {
+      "parameters": {
+        "functionCode": "// final logger\nreturn items;"
+      },
+      "name": "Done",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1120, 260]
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[ { "node": "Verify HMAC", "type": "main", "index": 0 } ]] },
+    "Verify HMAC": { "main": [[ { "node": "Is main branch?", "type": "main", "index": 0 } ]] },
+    "Is main branch?": { "main": [[ { "node": "Call Deploy Endpoint", "type": "main", "index": 0 } ],[ { "node": "Telegram Notification", "type": "main", "index": 0 } ]] },
+    "Call Deploy Endpoint": { "main": [[ { "node": "Telegram Notification", "type": "main", "index": 0 } ]] },
+    "Telegram Notification": { "main": [[ { "node": "Done", "type": "main", "index": 0 } ]] }
+  }
+}
