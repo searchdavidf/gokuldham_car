@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin - Pending</title></head>
+<body style="font-family:Arial,Helvetica,sans-serif;max-width:1000px;margin:20px auto;padding:0 16px; background-image:url('/assets/background.jpg'); background-size:cover; background-position:center;">
+  <div class="admin-shell">
+  <h1>Admin - Pending Signups</h1>
+  <div id="list"></div>
+  </div>
+  <script>
+    async function load(){
+      const r = await fetch('/api/admin/pending');
+      const j = await r.json();
+      const el = document.getElementById('list');
+      if(!r.ok){ el.textContent = 'Failed to load pending list'; return }
+      if(!j.length) { el.textContent = 'No pending signups'; return }
+      el.innerHTML = '';
+      j.forEach(u=>{
+        const d = document.createElement('div'); d.style.border='1px solid #ddd'; d.style.padding='12px'; d.style.marginBottom='8px';
+        d.innerHTML = `<strong>${u.full_name}</strong> — ${u.email} — ${u.phone} <div>${u.address}</div>`;
+        const approve = document.createElement('button'); approve.textContent='Approve'; approve.onclick=async()=>{
+          const pw = prompt('Set temporary password for user (or leave blank to auto-generate)');
+          const token = localStorage.getItem('admin_token');
+          const resp = await fetch('/api/admin/approve',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({userId:u.id,password:pw||undefined})});
+          if(resp.ok){ alert('Approved'); load() } else alert('Failed');
+        };
+        const reject = document.createElement('button'); reject.textContent='Reject'; reject.style.marginLeft='8px'; reject.onclick=async()=>{
+          const token = localStorage.getItem('admin_token');
+          const resp = await fetch('/api/admin/reject',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({userId:u.id})});
+          if(resp.ok){ alert('Rejected'); load() } else alert('Failed');
+        };
+        d.appendChild(approve); d.appendChild(reject);
+        el.appendChild(d);
+      });
+    }
+    load();
+  </script>
+</body>
+</html>
